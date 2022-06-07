@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import extern from "@/api/extern.js";
+import Extern from "@/api/extern.js";
 export default {
   data() {
     return {
@@ -55,7 +55,7 @@ export default {
   methods: {
     async sendEmailCode() {
       // 设置10秒内，按钮不能点击，前端判断条件send.timer>0
-      await extern.sendCode(this.email);
+      await Extern.sendCode(this.email);
       this.send.timer = 10;
       this.timer = setInterval(() => {
         this.send.timer -= 1;

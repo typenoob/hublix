@@ -8,7 +8,6 @@ axios.defaults.baseURL = 'http://127.0.0.1:7001'
 // http request 拦截器
 axios.interceptors.request.use(
     config => {
-        console.log(store.state.token);
         if (store.state.token) {
             config.headers.Authorization = `bearer ${store.state.token}`
         }

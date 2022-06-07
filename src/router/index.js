@@ -14,6 +14,22 @@ const routes = [
         },
     },
     {
+        name: 'register',
+        path: '/register',
+        component: () => import('@/pages/RegisterPage'),
+        meta: {
+            title: '注册',
+        },
+    },
+    {
+        name: 'search',
+        path: '/search',
+        component: () => import('@/pages/SearchPage'),
+        meta: {
+            title: '搜索',
+        },
+    },
+    {
         name: 'home',
         path: '/home',
         component: () => import('@/pages/HomePage'),
@@ -22,11 +38,35 @@ const routes = [
         },
     },
     {
-        name: 'register',
-        path: '/register',
-        component: () => import('@/pages/RegisterPage'),
+        name: 'collection',
+        path: '/collection',
+        component: () => import('@/pages/CollectionPage'),
         meta: {
-            title: '注册',
+            title: '收藏',
+        },
+    },
+    {
+        name: 'filter',
+        path: '/filter',
+        component: () => import('@/pages/FilterPage'),
+        meta: {
+            title: '筛选',
+        },
+    },
+    {
+        name: 'video',
+        path: '/video/:id',
+        component: () => import('@/pages/VideoPage'),
+        meta: {
+            title: '视频',
+        },
+    },
+    {
+        name: 'user',
+        path: '/user',
+        component: () => import('@/pages/UserPage'),
+        meta: {
+            title: '用户',
         },
     },
 ];
