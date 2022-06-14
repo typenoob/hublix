@@ -34,7 +34,6 @@ export default {
   },
   /* Getting the trailer url from the youtube api. */
   async trailerUrl(imbdId) {
-    console.log("imdb", imbdId);
     return axios
       .get(
         `https://www.googleapis.com/youtube/v3/search?part=snippet&key=${process.env.VUE_APP_YOUTUBE_KEY}&q=${imbdId}&type=video&maxResults=1`
