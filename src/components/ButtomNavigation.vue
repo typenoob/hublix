@@ -7,7 +7,7 @@
       class="mr-6"
     >
       <span> {{ page.name }}</span>
-      <v-icon>{{ page.icon }}</v-icon>
+      <v-icon :icon="page.icon" />
     </v-btn>
   </v-bottom-navigation>
 </template>

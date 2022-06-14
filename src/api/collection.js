@@ -1,17 +1,62 @@
 import axios from "@/utils/http";
-import store from "@/store/index";
+import store from "@/store";
 export default {
-  axios: axios,
-  create(name) {
-    store.commit("createCollection", name);
+  async create() {
+    return axios.post(`/collection`).then(() => this.readInfo());
   },
-  readAll() {
-    return store.state.collections;
+  async addMovie(id, movie_id) {
+    return axios
+      .post(`/collection/${id}/movie/${movie_id}`)
+      .then(() => this.readInfo());
   },
-  update(index, name) {
-    store.commit("updateCollection", { index, name });
+  async deleteMovie(movie_id) {
+    const collections = await axios.get(`/collection/all`);
+    collections.map((collection) => {
+      axios
+        .delete(`/collection/${collection.id}/movie/${movie_id}`)
+        .then(() => this.readInfo());
+    });
   },
-  delete(index) {
-    store.commit("deleteCollection", index);
+  async existMovie(id) {
+    return await axios.get(`/collection/exist?movie_id=${id}`);
+  },
+  async getFriendMovies(id) {
+    const { default_collection } = await axios.get(`/user/${id}`);
+    return await axios.get(`/collection/${default_collection}/movie/all`);
+  },
+  async getAllCollections() {
+    return await axios.get(`/collection/all`);
+  },
+  async readInfo() {
+    store.commit(
+      "setCollection",
+      await (
+        await axios.get("/collection/all")
+      ).reduce(async (result, collection) => {
+        return (await result).concat({
+          name: collection.name,
+          id: collection.id,
+          movies: await (
+            await axios.get(`/collection/${collection.id}/movie/all`)
+          ).reduce(
+            async (item, movie) =>
+              (
+                await item
+              ).concat({
+                id: movie.movie_id,
+              }),
+            []
+          ),
+        });
+      }, [])
+    );
+  },
+  async update(id, name) {
+    return axios
+      .post(`/collection/${id}`, { name })
+      .then(() => this.readInfo());
+  },
+  async delete(id) {
+    return axios.delete(`/collection/${id}`).then(() => this.readInfo());
   },
 };

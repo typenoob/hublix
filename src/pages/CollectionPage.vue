@@ -7,8 +7,10 @@
             v-for="(collection, index) in collections"
             :key="index"
             :index="index"
-            :name="collection.path"
-            :enable="!open.includes(index)"
+            :name="collection.name"
+            :enable="
+              !open.includes(index) && !readOnly && !is_default(collection.id)
+            "
             @onRemove="del($event)"
             @onRename="rename($event)"
           >
@@ -22,16 +24,14 @@
                       ? 'mdi-folder-open-outline'
                       : 'mdi-folder-outline'
                   "
-                  :title="collection.path"
-                  :value="collection.path"
+                  :title="collection.name"
+                  :value="collection.name"
                 ></v-list-item>
               </template>
               <MovieList
                 v-for="(movie, index) in collection.movies"
                 :key="index"
-                :title="movie.title"
-                :description="movie.description"
-                :classification="movie.classification"
+                :id="movie.id"
               />
             </v-list-group>
           </SwipeLeftAction>
@@ -39,11 +39,12 @@
       </v-col>
     </v-row>
 
-    <v-row class="align-end"
-      ><v-col align="end">
-        <v-btn @click="crt" class="mx-2" icon="mdi-plus" color="indigo">
-        </v-btn></v-col
-    ></v-row>
+    <v-row class="align-end" v-show="!readOnly">
+      <v-col align="end">
+        <v-btn @click="create()" class="mx-2" icon="mdi-plus" color="indigo">
+        </v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 <script>
@@ -55,25 +56,38 @@ export default {
     MovieList,
     SwipeLeftAction,
   },
+  created() {
+    collection.readInfo();
+  },
   data() {
     return {
       open: [],
-      collections: collection.readAll(),
     };
   },
+  props: {
+    readOnly: { type: Boolean, default: false },
+  },
+  computed: {
+    collections() {
+      return this.$store.state.collections;
+    },
+    is_default() {
+      return (id) => this.$store.state.user.info.default_collection === id;
+    },
+  },
   methods: {
-    crt() {
-      collection.create("新建收藏夹");
+    create() {
+      collection.create();
     },
     del(index) {
-      collection.delete(index);
+      collection.delete(this.collections[index].id);
     },
     rename(args) {
-      collection.update(args.index, args.name);
+      this.collections[args.index].name = args.name;
+      collection.update(this.collections[args.index].id, args.name);
     },
   },
 };
-//文件夹
 </script>
 <style>
 .list-item {

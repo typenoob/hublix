@@ -17,8 +17,7 @@ export default {
   name: "HomePage",
 
   components: { MovieCard },
-  created() {},
-  mounted() {
+  created() {
     Movie.nowPlaying().then((res) => {
       this.movies[0].ids = res;
     });

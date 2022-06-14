@@ -17,16 +17,14 @@
           @click="remove"
           class="remove"
           :style="`line-height:${height}px;right:${-DELBTNWIDTH / 2}px`"
-        >
-          mdi-delete
-        </v-icon>
+          icon="mdi-delete"
+        />
         <v-icon
           @click="renaming = true"
           class="rename"
           :style="`line-height:${height}px;right:${-DELBTNWIDTH}px`"
-        >
-          mdi-pencil
-        </v-icon>
+          icon="mdi-pencil"
+        />
       </div>
     </div>
     <slot v-if="!enable"></slot>
@@ -43,10 +41,9 @@
           style="flex: 1; outline: none"
           v-model="newName"
         />
-        <v-icon @click="rename">mdi-check</v-icon>
-        <v-icon @click="renaming = false" end>mdi-close</v-icon>
-      </div></v-list-item
-    >
+        <v-icon @click="rename" icon="mdi-check" />
+        <v-icon @click="renaming = false" end icon="mdi-close" /></div
+    ></v-list-item>
   </div>
 </template>
 <script>

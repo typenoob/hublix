@@ -5,19 +5,24 @@
         icon
         v-if="isTopLevelPage"
         @click.stop="this.$refs.drawer.changeDrawer()"
+        v-show="user.isLogin"
       >
-        <v-avatar>
-          <v-img
-            src="https://cdn.vuetifyjs.com/images/john.jpg"
-            alt="John"
-          ></v-img>
-        </v-avatar>
+        <v-badge
+          bordered
+          bottom
+          :color="user.isActive ? 'green accent-4' : 'grey'"
+          dot
+          offset-x="5"
+          offset-y="28"
+        >
+          <UserAvatar :name="user.info.nickname" :path="user.info.avatar_url" />
+        </v-badge>
       </v-btn>
-      <v-btn icon v-else @click="goBack">
+      <v-btn icon v-else @click="goBack" v-show="user.isLogin">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <v-toolbar-title class="ml-5">随意影视</v-toolbar-title>
-      <v-btn icon to="/search">
+      <v-btn icon to="/search" v-show="user.isLogin">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
       <template v-slot:image>
@@ -26,7 +31,7 @@
         ></v-img>
       </template>
     </v-toolbar>
-    <DrawerNavigation ref="drawer" />
+    <DrawerNavigation v-if="user.isLogin" ref="drawer" />
     <!-- 根据应用组件来调整你的内容 -->
     <v-main>
       <router-view v-slot="{ Component }">
@@ -35,16 +40,25 @@
         </v-slide-x-transition>
       </router-view>
     </v-main>
-    <ButtomNavigation :pages="topLevelPages" />
+    <ButtomNavigation v-show="user.isLogin" :pages="topLevelPages" />
+    <v-snackbar v-model="this.user.expired" color="warning">
+      登录过期，请重新登录
+    </v-snackbar>
   </v-app>
+  <v-alert v-show="this.$store.state.unfinished" type="warning"
+    >功能还在建设中</v-alert
+  >
 </template>
 
 <script>
 import ButtomNavigation from "@/components/ButtomNavigation.vue";
 import DrawerNavigation from "@/components/DrawerNavigation.vue";
+import UserAvatar from "@/components/UserAvatar.vue";
+import Extern from "@/api/extern";
+import User from "@/api/user";
 export default {
   name: "App",
-  components: { ButtomNavigation, DrawerNavigation },
+  components: { ButtomNavigation, DrawerNavigation, UserAvatar },
   created() {
     //在页面加载时读取sessionStorage里的状态信息
     if (sessionStorage.getItem("store")) {
@@ -63,14 +77,15 @@ export default {
     });
   },
   mounted() {
-    if (this.$store.state.user.isLogin) {
+    if (this.user.isLogin) {
       this.$router.push("/home");
     } else this.$router.push("/login");
-    //对video界面进行开发
-    this.$router.push("/video/343611");
+    this.heartbeat();
+    this.timer = setInterval(this.heartbeat, 60 * 1000); //设置定时器
   },
   data() {
     return {
+      timer: "",
       drawer: false,
       group: null,
       topLevelPages: [
@@ -98,11 +113,33 @@ export default {
         .map((item) => item.path)
         .includes(this.$route.path);
     },
+    user() {
+      return this.$store.state.user;
+    },
   },
   methods: {
     goBack() {
-      this.$router.go(-1);
+      this.$router.back();
     },
+    upload: Extern.upload,
+    async heartbeat() {
+      if (this.user.isLogin) {
+        await User.postActive();
+        User.readActive(this.user.info.id);
+      }
+    },
+  },
+  beforeUnmount() {
+    clearInterval(this.timer);
   },
 };
 </script>
+<style>
+.v-alert {
+  position: fixed;
+  left: 50%;
+  bottom: 50px;
+  transform: translate(-50%, -50%);
+  margin: 0 auto;
+}
+</style>

@@ -8,7 +8,7 @@
       <v-col>
         <v-text-field
           append-icon="''"
-          v-model="username"
+          v-model="payload.username"
           label="用户名"
           prepend-icon="mdi-account"
         ></v-text-field>
@@ -16,7 +16,7 @@
       <v-col>
         <v-text-field
           :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-          v-model="password"
+          v-model="payload.password"
           :type="showPassword ? 'text' : 'password'"
           label="密码"
           prepend-icon="mdi-lock"
@@ -35,6 +35,9 @@
         </v-row>
       </v-col>
     </v-row>
+    <v-snackbar v-model="snackbar.appear" :color="snackbar.color">
+      {{ snackbar.msg }}
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -47,19 +50,32 @@ export default {
 
   data() {
     return {
-      username: "",
-      password: "",
+      payload: {
+        username: "",
+        password: "",
+      },
       showPassword: false,
+      snackbar: { appear: false, color: "", msg: "" },
     };
   },
   methods: {
     login() {
-      User.login({
-        username: this.username,
-        password: this.password,
-      }).then(() => {
-        this.$router.push("/home");
-      });
+      User.login(this.payload)
+        .then(() => {
+          Object.assign(this.snackbar, {
+            appear: true,
+            color: "success",
+            msg: "登录成功",
+          });
+          this.$router.push("/home");
+        })
+        .catch(() =>
+          Object.assign(this.snackbar, {
+            appear: true,
+            color: "error",
+            msg: "登录失败",
+          })
+        );
     },
     register() {
       this.$router.push("/register");

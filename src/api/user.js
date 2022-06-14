@@ -1,30 +1,86 @@
 import axios from "@/utils/http";
-import store from "@/store/index";
+import store from "@/store";
+import { router } from "@/router";
 export default {
-  login(body) {
-    // return axios.post('/sessions', body).then((res) => {
-    //     store.commit(res.data);
-    // });
-    // 生产环境中使用上面的方式
-    store;
-    body;
-    return Promise.resolve("success").then(() => {
-      store.commit("login", "token");
-    });
+  //TODO 用户api接入
+  async login({ username, password }) {
+    store.commit(
+      "login",
+      await axios.post("/session/token", { username, password })
+    );
+    this.readInfo();
   },
-  index() {
-    axios;
-    return Promise.resolve("验证成功");
+  register({ username, password, nickname, email }) {
+    return axios.post("/user", { username, password, nickname, email });
   },
-  register() {
-    //TODO 用户注册
+  async logout() {
+    await axios.post("/user/logout");
+    store.commit("logout");
+    router.push("/login");
   },
-  logout() {
-    //TODO 用户注销
+  async readActive(id) {
+    return axios
+      .get(`/user/${id}/online`)
+      .then((res) => store.commit("readActive", res));
   },
-  like(id) {
-    //TODO 判断用户对某个视频的态度
-    id;
-    return 0;
+  postActive() {
+    return axios.post("/user/online");
+  },
+  async uploadAvatar(file) {
+    let formData = new FormData();
+    formData.append("name", "file");
+    formData.append("file", file);
+    return axios
+      .post("/upload/avatar", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      .then(() => this.readInfo());
+  },
+  async readInfo() {
+    return store.commit("setUser", await axios.get("/user"));
+  },
+  friend: {
+    addFriend(name) {
+      return axios.post("/friend/apply", { name });
+    },
+    async deleteFriend(id) {
+      return axios.delete(`/friend/${id}`).then(() => this.readInfo());
+    },
+    async acceptApply(id) {
+      return axios.post(`/friend/${id}/accept`).then(() => this.readInfo());
+    },
+    async rejectApply(id) {
+      return axios.post(`/friend/${id}/reject`).then(() => this.readInfo());
+    },
+    async pinTop(id) {
+      return axios.post(`/friend/${id}/pin`).then(() => this.readInfo());
+    },
+    async readInfo() {
+      store.commit("setFriend", {
+        apply: await (
+          await axios.get("/friend/apply/all")
+        ).reduce(
+          async (acc, cur) =>
+            (await acc).concat(await axios.get(`/user/${cur.friend_id}`)),
+          []
+        ),
+        list: await (
+          await axios.get("/friend/all")
+        ).reduce(
+          async (acc, cur) =>
+            (
+              await acc
+            ).concat(
+              Object.assign(await axios.get(`/user/${cur.friend_id}`), {
+                is_top: cur.is_top,
+                is_active: await axios.get(`/user/${cur.friend_id}/online`),
+              })
+            ),
+          []
+        ),
+      });
+    },
   },
 };

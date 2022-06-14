@@ -1,6 +1,5 @@
 <template>
   <v-container>
-    <v-alert v-if="unfinished" type="warning">功能还在建设中</v-alert>
     <v-responsive :aspect-ratio="16 / 9">
       <iframe
         :src="videoUrl"
@@ -45,24 +44,37 @@
       </v-col>
     </v-row>
     <CommentSection />
+    <CollectMovie :visible="showDialog" @close="showDialog = false" />
   </v-container>
 </template>
 <script>
 import Movie from "@/api/movie.js";
 import CommentSection from "@/components/CommentSection.vue";
+import CollectMovie from "@/components/dialog/CollectMovie.vue";
 export default {
-  components: { CommentSection },
+  components: { CommentSection, CollectMovie },
+  computed: {
+    id() {
+      return this.$route.params.id;
+    },
+  },
   created() {
-    Movie.detail(this.$route.params.id).then((res) => {
-      Movie.trailerUrl(res.imdb_id).then((res) => {
+    this.fetchData();
+    Movie.detail(this.id).then((res) => {
+      Movie.trailerUrl(res.imdbId).then((res) => {
         Object.assign(this, res);
       });
     });
   },
+  mounted() {
+    Movie.history.onVisited(this.id);
+  },
+
   data() {
     return {
+      showDialog: false,
       videoId: "11111",
-      videoUrl: "https://www.youtube.com/embed/4ooUbNOLAz0",
+      videoUrl: "",
       buttons: [
         { icon: "mdi-share-outline", action: this.share, text: "分享" },
         { icon: "mdi-download-outline", action: this.download, text: "下载" },
@@ -74,40 +86,35 @@ export default {
       ],
       unfinished: false,
       attitudeEnum: {
-        positive: 2,
-        neutral: 1,
-        negative: 0,
+        positive: 1,
+        neutral: 0,
+        negative: -1,
       },
-      attitude: 1,
-      likes: Movie.likes.read(this.$route.params.id),
+      attitude: 0,
+      likes: 0,
     };
   },
   methods: {
-    like() {
-      Movie.likes.create(this.$route.params.id);
-      this.likes = Movie.likes.read(this.$route.params.id);
-      this.attitude++;
+    async fetchData() {
+      this.likes = await Movie.likes(this.id);
+      this.attitude = await Movie.attitude.read(this.id);
     },
-    dislike() {
-      Movie.likes.delete(this.$route.params.id);
-      this.likes = Movie.likes.read(this.$route.params.id);
-      this.attitude--;
+    async like() {
+      await Movie.attitude.like(this.id);
+      this.fetchData();
+    },
+    async dislike() {
+      await Movie.attitude.dislike(this.id);
+      this.fetchData();
     },
     share() {
-      this.unfinished = true;
-      setTimeout(() => {
-        this.unfinished = false;
-      }, 2000);
+      this.$store.commit("alertUnfinished");
     },
     download() {
-      this.unfinished = true;
-      setTimeout(() => {
-        this.unfinished = false;
-      }, 2000);
+      this.$store.commit("alertUnfinished");
     },
     addToCollections() {
-      //TODO 保存至收藏夹
-      console.log("addToCollections");
+      this.showDialog = true;
     },
   },
 };

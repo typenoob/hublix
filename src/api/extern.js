@@ -1,12 +1,16 @@
 import axios from "@/utils/http";
 export default {
-  sendCode: (email) => {
-    axios;
-    email;
-    console.log(`${email}已发送`);
-    return Promise.resolve("123456");
+  sendCode(address) {
+    return axios.post("/email", { address });
   },
-  sendNotify: (body) => {
-    body;
+  async verifyCode(address, code) {
+    return axios
+      .get(`/email?address=${address}&code=${code}`)
+      .then((res) => res.verifySuccess);
+  },
+  upload(file) {
+    let formData = new FormData();
+    formData.append("file", file);
+    return axios.post("/upload/avatar", formData);
   },
 };

@@ -38,7 +38,6 @@ export default {
           this.remoteSearch(val);
         }, 300);
       } else {
-        // 输入框中的内容被删为空时触发，此时会清除之前展示的搜索结果
         this.items = [];
       }
     },
@@ -46,22 +45,10 @@ export default {
   methods: {
     remoteSearch(val) {
       this.isLoading = true;
-
       // Lazily load input items
-      Movie
-        .search(val)
-        .then((res) => {
-          if (res.data.results)
-            this.items = res.data.results.map((element) => {
-              return {
-                title: element.title,
-                id: element.id,
-              };
-            });
-        })
-        .finally(() => {
-          this.isLoading = false;
-        });
+      Movie.search(val)
+        .then((res) => (this.items = res))
+        .finally(() => (this.isLoading = false));
     },
   },
 };

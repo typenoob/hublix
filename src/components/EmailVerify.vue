@@ -1,4 +1,4 @@
- <template>
+<template>
   <v-text-field
     width="300"
     v-model="email"
@@ -17,7 +17,7 @@
         color="primary"
         block
         elevation="2"
-        @click="sendEmailCode"
+        @click="sendEmailCode()"
         :disabled="send.timer > 0"
         type="primary"
       >
@@ -55,7 +55,7 @@ export default {
   methods: {
     async sendEmailCode() {
       // 设置10秒内，按钮不能点击，前端判断条件send.timer>0
-      await Extern.sendCode(this.email);
+      Extern.sendCode(this.email);
       this.send.timer = 10;
       this.timer = setInterval(() => {
         this.send.timer -= 1;
@@ -67,6 +67,3 @@ export default {
   },
 };
 </script>
- 
- 
-    

@@ -4,18 +4,24 @@ import { createStore } from "vuex";
 export default createStore({
   state() {
     return {
+      unfinished: false,
       user: {
         token: "",
         isLogin: false,
-      },
-      collections: [
-        {
-          path: "收藏",
-          movies: [
-            { title: "电影", description: "描述", classification: "分类" },
-          ],
+        isActive: false,
+        expired: false,
+        info: {
+          id: "未知",
+          name: "未知",
+          nickname: "未知",
+          email: "未知",
+          avatar_url: "未知",
         },
-      ],
+        friends: {
+          apply: [],
+        },
+      },
+      collections: [],
       movies: [
         {
           id: "343611",
@@ -41,50 +47,34 @@ export default createStore({
   },
   mutations: {
     login(state, token) {
-      state.user.token = token;
-      state.user.isLogin = true;
+      Object.assign(state.user, { token, isLogin: true, expired: false });
     },
-    setUser(state, data) {
-      state.user.token = data.token;
-      state.user.isLogin = data.isLogin;
+    logout(state) {
+      Object.assign(state.user, { token: "", isLogin: false, expired: false });
     },
-    createCollection(state, name) {
-      state.collections.push({ path: name, movies: null });
+    expire(state) {
+      Object.assign(state.user, { token: "", isLogin: false, expired: true });
     },
-    deleteCollection(state, index) {
-      state.collections.splice(index, 1);
+    readActive(state, isActive) {
+      state.user.isActive = isActive;
     },
-    updateCollection(state, data) {
-      state.collections[data.index].path = data.name;
+    setActive(state) {
+      state.user.isActive = true;
     },
-    createComment(state, data) {
-      state.movies
-        .find((movie) => movie.id === data.id)
-        .comments.push({
-          avatarUrl: "https://cdn.vuetifyjs.com/images/john.png",
-          author: "张三",
-          content: data.content,
-          date: "2022-06-07",
-        });
+    setUser(state, info) {
+      state.user.info = info;
     },
-    deleteComment(state, data) {
-      state.movies
-        .find((movie) => movie.id === data.id)
-        .comments.splice(data.index, 1);
+    setFriend(state, friends) {
+      state.user.friends = friends;
     },
-    updateComment(state, data) {
-      state.movies.find((movie) => movie.id === data.id).comments[
-        data.index
-      ].content = data.content;
+    setCollection(state, info) {
+      state.collections = info;
     },
-    addLikes(state, id) {
-      state.movies.find((movie) => movie.id === id).likes++;
-    },
-    minusLikes(state, id) {
-      state.movies.find((movie) => movie.id === id).likes--;
-    },
-    createHistory(state, id) {
-      state.history.push(id);
+    alertUnfinished(state) {
+      state.unfinished = true;
+      setTimeout(() => {
+        state.unfinished = false;
+      }, 2000);
     },
   },
 });
