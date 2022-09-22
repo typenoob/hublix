@@ -9,7 +9,7 @@
 
 ## 快速体验
 
-- 点击进入[随意影视](hublix.namu.cf)
+- 点击进入[随意影视](http://hublix.namu.cf)
 
 ## 界面截图
 
