@@ -11,6 +11,10 @@
 
 - 点击进入[随意影视](http://hublix.namu.cf)
 
+## 后端环境
+
+- 采用eggjs框架编写 [点击跳转](https://github.com/typenoob/hublix_backend)
+
 ## 界面截图
 
 ![image](https://user-images.githubusercontent.com/61347081/189036475-8aef873d-cb06-4b32-86fe-d8659791f563.png)
