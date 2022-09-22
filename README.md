@@ -1,5 +1,16 @@
 # hublix
 
+## 编译运行
+
+1. 更改根目录下.env.sample文件为.env文件，并在其中填入youtube api和tmbd api的key。
+2. 更改/src/utils/http.js第7行的后端主机地址为你部署的主机地址。
+3. 执行npm install
+4. 执行npm run serve
+
+## 快速体验
+
+- 点击进入[随意影视](hublix.namu.cf)
+
 ## 界面截图
 
 ![image](https://user-images.githubusercontent.com/61347081/189036475-8aef873d-cb06-4b32-86fe-d8659791f563.png)
