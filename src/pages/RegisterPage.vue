@@ -121,8 +121,10 @@ export default {
             User.register(
               Object.assign(this.payload, { email: this.$refs.email.email })
             ).then((res) => {
-              if (res.updateSuccess) this.success = true;
-              else {
+              if (res.updateSuccess) {
+                this.success = true;
+                this.$router.push("/login");
+              } else {
                 this.msg = res.err;
                 this.error = true;
               }

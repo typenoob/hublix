@@ -3,9 +3,9 @@
 ## 编译运行
 
 1. 更改根目录下.env.sample文件为.env文件，并在其中填入youtube api和tmbd api的key。
-2. 更改/src/utils/http.js第7行的后端主机地址为你部署的主机地址。
-3. 执行npm install
-4. 执行npm run serve
+2. 更改[后端主机地址](https://github.com/typenoob/hublix/blob/master/src/utils/http.js#L7)为你部署的主机地址。
+3. 执行命令`npm install`
+4. 执行命令`npm run serve`
 
 ## 快速体验
 
