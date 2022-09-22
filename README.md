@@ -1,5 +1,7 @@
 # hublix
 
+随意影视
+
 ## 编译运行
 
 1. 更改根目录下.env.sample文件为.env文件，并在其中填入youtube api和tmbd api的key。
