@@ -1,10 +1,11 @@
-import axios from "axios";
-import store from "@/store";
 import { router } from "@/router";
+import store from "@/store";
+import axios from "axios";
 
 // axios 配置
 axios.defaults.timeout = 10000;
-axios.defaults.baseURL = "http://127.0.0.1:7001/api/v1";
+axios.defaults.baseURL =
+  "egg.web-framework-ao2f.1627164863551065.cn-hangzhou.fc.devsapp.net/api/v1";
 
 // http request 拦截器
 axios.interceptors.request.use(
