@@ -27,7 +27,7 @@ youtube上的预告片。
 
 - 点击进入[随意影视](http://hublix.namu.cf)
 
-[![Powered by Vercel](https://raw.githubusercontent.com/abumalick/powered-by-vercel/master/powered-by-vercel.svg)](https://vercel.com?utm_source=hublix&utm_campaign=oss)
+[![Powered by Vercel](https://raw.githubusercontent.com/abumalick/powered-by-vercel/master/powered-by-vercel.svg)](https://vercel.com?utm_source=typenoob&utm_campaign=oss)
 
 :heart:
 
