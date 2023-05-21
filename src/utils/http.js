@@ -5,7 +5,7 @@ import axios from "axios";
 // axios 配置
 axios.defaults.timeout = 10000;
 axios.defaults.baseURL =
-  "http://egg.web-framework-ao2f.1627164863551065.cn-hangzhou.fc.devsapp.net/api/v1";
+  "https://egg.web-framework-ao2f.1627164863551065.cn-hangzhou.fc.devsapp.net/api/v1";
 
 // http request 拦截器
 axios.interceptors.request.use(
