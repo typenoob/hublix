@@ -27,6 +27,8 @@ youtube上的预告片。
 
 - 点击进入[随意影视](http://hublix.namu.cf)
 
+[![https://vercel.com?utm_source=github_readme_stats_team&utm_campaign=oss](./powered-by-vercel.svg)](https://vercel.com?utm_source=github_readme_stats_team&utm_campaign=oss)
+
 ## 界面截图
 
 ![image](https://user-images.githubusercontent.com/61347081/189036475-8aef873d-cb06-4b32-86fe-d8659791f563.png)
