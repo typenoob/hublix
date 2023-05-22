@@ -26,6 +26,12 @@ youtube上的预告片。
 ## 快速体验
 
 - 点击进入[随意影视](http://hublix.namu.cf)
+- 
+**Warning**
+由于域名未实现ssl，而vercel域名强制https，需要访问[后端地址](https://egg.web-framework-ao2f.1627164863551065.cn-hangzhou.fc.devsapp.net)，并同意隐私安全设置
+
+**Note**
+您也可以访问[github域名](http://hublix.github.namu.cf/)
 
 [![Powered by Vercel](https://raw.githubusercontent.com/abumalick/powered-by-vercel/master/powered-by-vercel.svg)](https://vercel.com?utm_source=typenoob&utm_campaign=oss)
 
