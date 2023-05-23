@@ -14,7 +14,7 @@
             @onRemove="del($event)"
             @onRename="rename($event)"
           >
-            <v-list-group active-color="primary" :value="index">
+            <v-list-group base-color="primary" :value="index">
               <template v-slot:activator="{ props }">
                 <v-list-item
                   class="list-item"

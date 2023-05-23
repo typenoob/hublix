@@ -2,7 +2,6 @@ import axios from "@/utils/http";
 import store from "@/store";
 import { router } from "@/router";
 export default {
-  //TODO 用户api接入
   async login({ username, password }) {
     store.commit(
       "login",

@@ -1,6 +1,11 @@
 <template>
   <v-app>
-    <v-toolbar image="/appbar.png" app>
+    <v-app-bar app image="/appbar.png">
+      <template v-slot:image>
+        <v-img
+          gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"
+        ></v-img>
+      </template>
       <v-btn
         icon
         v-if="isTopLevelPage"
@@ -21,16 +26,12 @@
       <v-btn icon v-else @click="goBack" v-show="user.isLogin">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
-      <v-toolbar-title class="ml-5">随意影视</v-toolbar-title>
+      <v-app-bar-title class="ml-5">随意影视</v-app-bar-title>
       <v-btn icon to="/search" v-show="user.isLogin">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
-      <template v-slot:image>
-        <v-img
-          gradient="to top right, rgba(19,84,122,.8), rgba(128,208,199,.8)"
-        ></v-img>
-      </template>
-    </v-toolbar>
+    </v-app-bar>
+
     <DrawerNavigation v-if="user.isLogin" ref="drawer" />
     <!-- 根据应用组件来调整你的内容 -->
     <v-main>
@@ -40,14 +41,14 @@
         </v-slide-x-transition>
       </router-view>
     </v-main>
-    <ButtomNavigation v-show="user.isLogin" :pages="topLevelPages" />
+    <ButtomNavigation v-if="user.isLogin" :pages="topLevelPages" />
     <v-snackbar v-model="this.user.expired" color="warning">
       登录过期，请重新登录
     </v-snackbar>
+    <v-alert v-show="this.$store.state.unfinished" type="warning"
+      >功能还在建设中</v-alert
+    >
   </v-app>
-  <v-alert v-show="this.$store.state.unfinished" type="warning"
-    >功能还在建设中</v-alert
-  >
 </template>
 
 <script>
@@ -77,6 +78,7 @@ export default {
     });
   },
   mounted() {
+    // this.user.isLogin = true;
     if (this.user.isLogin) {
       this.$router.push("/home");
     } else this.$router.push("/login");
@@ -134,7 +136,7 @@ export default {
   },
 };
 </script>
-<style>
+<style lang="scss">
 .v-alert {
   position: fixed;
   left: 50%;

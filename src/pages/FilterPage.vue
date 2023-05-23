@@ -4,23 +4,10 @@
       <v-col cols="3">
         <v-select
           v-if="visible"
-          @focus="onFocus()"
-          v-model="all"
-          :items="['全部']"
-          label="类型"
-          variant="plain"
-        >
-        </v-select>
-        <v-select
-          ref="select"
-          id="select"
-          v-else
           v-model="genresSelect"
           :items="genres.map((genre) => genre.name)"
-          chips
           label="类型"
           variant="plain"
-          multiple
         >
         </v-select>
       </v-col>
@@ -61,9 +48,16 @@
     <div class="text-center">
       <v-pagination
         v-model="page"
+        rounded
+        density="compact"
         prev-icon="mdi-menu-left"
         next-icon="mdi-menu-right"
-        :length="6"
+        total-visible="6"
+        :length="
+          (totalResults - 1) / perPage + 1 > 999
+            ? 999
+            : parseInt((totalResults - 1) / perPage + 1)
+        "
       ></v-pagination>
     </div>
   </v-container>
@@ -75,17 +69,18 @@ export default {
   setup() {},
   components: { MovieCard },
   created() {
-    this.fetchMovie();
     Movie.genres().then((res) => {
-      this.genres = res;
+      this.genres.push(...res);
+      console.log(this.genres);
     });
+    this.fetchMovie();
   },
   data() {
     return {
       visible: true,
-      all: "全部",
-      genres: [],
-      genresSelect: [],
+      totalResults: 0,
+      genres: [{ name: "全部" }],
+      genresSelect: "全部",
       sorts: [
         { label: "人气", name: "popularity" },
         { label: "发布日期", name: "release_date" },
@@ -114,8 +109,7 @@ export default {
       );
     },
     genresId() {
-      return this.genres.find((genre) => genre.name === this.genresSelect[0])
-        ?.id;
+      return this.genres.find((genre) => genre.name === this.genresSelect)?.id;
     },
     sortName() {
       return this.sorts.find((sort) => sort.label === this.sort).name;
@@ -128,6 +122,7 @@ export default {
   watch: {
     page(val) {
       if (val * this.perPage >= this.ids.length) {
+        this.fetchPage = parseInt((val * this.perPage - 1) / 20) + 1;
         this.fetchMovie();
       }
     },
@@ -156,18 +151,16 @@ export default {
   methods: {
     fetchMovie() {
       Movie.filter(
-        this.fetchPage++,
+        this.fetchPage,
         this.year,
         this.genresId,
         this.sortName
       ).then((res) => {
-        this.ids.push(...res);
-      });
-    },
-    onFocus() {
-      this.visible = false;
-      this.$nextTick(function () {
-        document.getElementById("select").click();
+        while (this.ids.length < this.fetchPage * 20) {
+          this.ids.push(null);
+        }
+        this.ids.splice((this.fetchPage - 1) * 20, 20, ...res.list);
+        this.totalResults = res.totalResults;
       });
     },
   },

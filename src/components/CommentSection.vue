@@ -25,7 +25,6 @@
 </template>
 
 <script>
-//TODO send comments to vuex
 import CommentList from "@/components/CommentList.vue";
 import Movie from "@/api/movie";
 export default {

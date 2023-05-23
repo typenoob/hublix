@@ -49,7 +49,6 @@
   </v-card>
 </template>
 <script>
-//TODO 添加到默认收藏夹
 import Movie from "@/api/movie.js";
 import Collection from "@/api/collection.js";
 import { useDisplay } from "vuetify";
