@@ -2,21 +2,24 @@
   <v-navigation-drawer v-model="drawer" app temporary>
     <v-list>
       <v-list-item>
-        <v-list-item-avatar start left prepend>
-          <v-badge
-            bordered
-            bottom
-            :color="user.isActive ? 'green accent-4' : 'grey'"
-            dot
-            offset-x="5"
-            offset-y="28"
-          >
-            <UserAvatar
-              :name="user.info.nickname"
-              :path="user.info.avatar_url"
-            />
-          </v-badge>
-        </v-list-item-avatar>
+        <template v-slot:prepend>
+          <v-avatar start>
+            <v-badge
+              bordered
+              bottom
+              :color="user.isActive ? 'green accent-4' : 'grey'"
+              dot
+              offset-x="5"
+              offset-y="28"
+            >
+              <UserAvatar
+                :name="user.info.nickname"
+                :path="user.info.avatar_url"
+              />
+            </v-badge>
+          </v-avatar>
+        </template>
+
         <v-list-item
           :title="user.info.nickname"
           :subtitle="user.info.email"
@@ -133,10 +136,12 @@
           ></v-card>
         </template>
         <template v-slot:activator="{ props }">
-          <v-list-item :value="item" active-color="primary" v-bind="props">
-            <v-list-item-avatar start>
-              <v-icon :icon="item.icon" />
-            </v-list-item-avatar>
+          <v-list-item :value="item" base-color="primary" v-bind="props">
+            <template v-slot:prepend>
+              <v-avatar start>
+                <v-icon :icon="item.icon" />
+              </v-avatar>
+            </template>
             <v-list-item-title>{{ item.text }}</v-list-item-title>
           </v-list-item>
         </template>

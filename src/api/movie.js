@@ -1,6 +1,5 @@
 import axios from "@/utils/http";
 export default {
-  //TODO adjust api
   /* A function that is used to search for movies. */
   that: this,
   search(query) {
@@ -87,7 +86,7 @@ export default {
         `https://api.themoviedb.org/3/discover/movie?api_key=${process.env.VUE_APP_TMDB_KEY}&language=zh-CN&sort_by=${sort}.desc&include_adult=false&page=${page}&primary_release_year=${year}&with_genres=${genres}`
       )
       .then((res) => {
-        return res.results.map((movie) => movie.id);
+        return { list: res.results.map((movie) => movie.id), totalResults: res.total_results };
       });
   },
   async genres() {

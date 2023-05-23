@@ -1,13 +1,21 @@
 <template>
-  <v-bottom-navigation :value="activeBtn" color="primary" app fluid>
+  <v-bottom-navigation
+    :value="activeBtn"
+    color="primary"
+    hide-on-scroll
+    grow
+    fluid
+    app
+    density="comfortable"
+  >
     <v-btn
       v-for="(page, index) in pages"
       :key="index"
       :to="page.path"
-      class="mr-6"
+      :value="page.name"
     >
-      <span> {{ page.name }}</span>
       <v-icon :icon="page.icon" />
+      {{ page.name }}
     </v-btn>
   </v-bottom-navigation>
 </template>
